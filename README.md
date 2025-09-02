@@ -18,7 +18,7 @@ A secure cloud file storage platform with AES-256 encryption, built with Python 
 ![Registration Page](screenshots/registration-page.png)
 
 ### User Login
-![Login Page](screenshots/login-page.png)
+![Login Page](https://github.com/Ashokkalluri26/cloudbased_filestoragedataencryption/blob/main/screenshots/login.png)
 
 ## Quick Start
 
