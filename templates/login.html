@@ -1,0 +1,555 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-4">
+            <div class="auth-card">
+                <div class="theme-toggle-container">
+                    <button type="button" class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-sun" id="theme-icon"></i>
+                    </button>
+                </div>
+                
+                <div class="auth-header">
+                    <div class="brand-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>SecureCloud</span>
+                    </div>
+                    <h2 class="auth-title">Welcome Back</h2>
+                    <p class="auth-subtitle">Sign in to access your secure files</p>
+                </div>
+                
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <form method="POST" class="auth-form">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control auth-input" name="email" placeholder=" " autocomplete="email" required>
+                        <label>Email</label>
+                        <div class="form-text">Enter your registered email address</div>
+                    </div>
+                    
+                    <div class="form-floating mb-3 position-relative">
+                        <input type="password" class="form-control auth-input" name="password" placeholder=" " autocomplete="current-password" required>
+                        <label>Password</label>
+                        <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                            <i class="fas fa-eye" id="password-eye"></i>
+                        </button>
+                        <div class="form-text">Enter your secure password</div>
+                    </div>
+                    
+                    <div class="form-check mb-4">
+                        <input type="checkbox" class="form-check-input" name="remember_me">
+                        <label class="form-check-label text-muted">Remember me</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary auth-btn w-100 mb-3" id="loginBtn">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Sign In
+                    </button>
+                    
+                    <div class="forgot-password text-center mb-3">
+                        <a href="#" class="text-decoration-none">
+                            <i class="fas fa-key me-1"></i>
+                            Forgot your password?
+                        </a>
+                    </div>
+                </form>
+                
+                <div class="auth-footer">
+                    <div class="auth-divider">
+                        <span>New to SecureCloud?</span>
+                    </div>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Get Started Free
+                    </a>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function togglePassword(fieldName) {
+    const field = document.querySelector(`input[name="${fieldName}"]`);
+    const eye = document.getElementById(`${fieldName}-eye`);
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        eye.classList.remove('fa-eye');
+        eye.classList.add('fa-eye-slash');
+    } else {
+        field.type = 'password';
+        eye.classList.remove('fa-eye-slash');
+        eye.classList.add('fa-eye');
+    }
+}
+
+function toggleTheme() {
+    const container = document.querySelector('.auth-container');
+    const themeIcon = document.getElementById('theme-icon');
+    const isDark = container.classList.contains('dark-theme');
+    
+    if (isDark) {
+        container.classList.remove('dark-theme');
+        container.classList.add('light-theme');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+    } else {
+        container.classList.remove('light-theme');
+        container.classList.add('dark-theme');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.auth-form');
+    const loginBtn = document.getElementById('loginBtn');
+    
+    form.addEventListener('submit', function() {
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing In...';
+    });
+    
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const container = document.querySelector('.auth-container');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'light') {
+        container.classList.add('light-theme');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+    } else {
+        container.classList.add('dark-theme');
+    }
+    
+    // Add floating label animation
+    const inputs = document.querySelectorAll('.auth-input');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block styles %}
+<style>
+.auth-container {
+    min-height: 100vh;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.auth-container.dark-theme {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+
+.auth-container.light-theme {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+}
+
+.auth-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.15) 0%, transparent 50%);
+    animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    animation: slideInLeft 0.8s ease-out;
+}
+
+.brand-logo i {
+    font-size: 2.5rem;
+    color: #6366f1;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.3));
+}
+
+.brand-logo span {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+}
+
+.auth-title {
+    color: #f8fafc;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    color: #cbd5e1;
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+.auth-input {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #f8fafc !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    height: auto !important;
+}
+
+.auth-input:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25) !important;
+    color: #f8fafc !important;
+}
+
+.auth-input::placeholder {
+    color: #94a3b8 !important;
+}
+
+.form-floating > label {
+    color: #94a3b8 !important;
+    padding: 1rem 0.75rem;
+    transform-origin: 0 0;
+    transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    opacity: 0.65;
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+
+.form-floating > .form-control {
+    padding: 1rem 0.75rem;
+}
+
+.form-floating > .form-control:focus,
+.form-floating > .form-control:not(:placeholder-shown) {
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+}
+
+.auth-btn {
+    padding: 1rem 2rem;
+    font-weight: 600;
+    border-radius: 12px;
+    background: var(--primary-gradient);
+    border: none;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(99, 102, 241, 0.6);
+}
+
+.auth-footer {
+    text-align: center;
+}
+
+.auth-divider {
+    position: relative;
+    margin: 2rem 0 1.5rem;
+}
+
+.auth-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.auth-divider span {
+    background: rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    position: relative;
+}
+
+.btn-outline-primary {
+    border: 1px solid #6366f1;
+    color: #6366f1;
+    background: transparent;
+    border-radius: 12px;
+    padding: 0.875rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    z-index: 10;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.forgot-password a {
+    color: #cbd5e1;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.forgot-password a:hover {
+    color: #6366f1;
+    text-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+}
+
+.theme-toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.theme-toggle i {
+    color: #f8fafc;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.form-text {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.invalid-feedback {
+    color: #fca5a5 !important;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Light theme styles */
+.auth-container.light-theme .auth-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.auth-container.light-theme .auth-title {
+    color: #1e293b;
+}
+
+.auth-container.light-theme .auth-subtitle {
+    color: #64748b;
+}
+
+.auth-container.light-theme .auth-input {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    color: #1e293b !important;
+}
+
+.auth-container.light-theme .auth-input:focus {
+    background: rgba(0, 0, 0, 0.08) !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25) !important;
+}
+
+.auth-container.light-theme .auth-input::placeholder {
+    color: #64748b !important;
+}
+
+.auth-container.light-theme .form-floating > label {
+    color: #64748b !important;
+    padding: 1rem 0.75rem;
+}
+
+.auth-container.light-theme .form-floating > .form-control:focus ~ label,
+.auth-container.light-theme .form-floating > .form-control:not(:placeholder-shown) ~ label {
+    opacity: 0.65;
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+
+.auth-container.light-theme .password-toggle {
+    color: #64748b;
+}
+
+.auth-container.light-theme .password-toggle:hover {
+    color: #1e293b;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.auth-container.light-theme .form-check-label {
+    color: #64748b !important;
+}
+
+.auth-container.light-theme .auth-divider span {
+    background: rgba(255, 255, 255, 0.9);
+    color: #64748b;
+}
+
+.auth-container.light-theme .auth-divider::before {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.auth-container.light-theme .btn-outline-primary {
+    border: 1px solid #6366f1;
+    color: #6366f1;
+}
+
+.auth-container.light-theme .btn-outline-primary:hover {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: white;
+}
+
+.auth-container.light-theme .forgot-password a {
+    color: #64748b;
+}
+
+.auth-container.light-theme .forgot-password a:hover {
+    color: #6366f1;
+}
+
+.auth-container.light-theme .theme-toggle {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.auth-container.light-theme .theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.auth-container.light-theme .theme-toggle i {
+    color: #1e293b;
+}
+
+.auth-container.light-theme .form-text {
+    color: #64748b;
+}
+
+.auth-container.light-theme .brand-logo span {
+    background: linear-gradient(135deg, #1e293b, #475569);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.auth-container.light-theme .brand-logo i {
+    background: linear-gradient(135deg, #1e293b, #475569);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+</style>
+{% endblock %}

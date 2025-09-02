@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile - SecureCloud{% endblock %}
+
+{% block content %}
+<div class="edit-profile-container">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="brand-logo navbar-brand">
+                <i class="fas fa-shield-alt"></i>
+                <span>SecureCloud</span>
+            </div>
+            
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <img src="{{ current_user.profile_pic or '/static/images/default-avatar.png' }}" class="profile-pic-nav" alt="Profile">
+                        {{ current_user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="edit-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-edit me-2"></i>Edit Profile</h2>
+                            <p>Update your account information and preferences</p>
+                        </div>
+                        
+                        <form method="POST" enctype="multipart/form-data" class="edit-form">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                                    {% for category, message in messages %}
+                                        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                                            {{ message }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                            
+                            <!-- Profile Picture -->
+                            <div class="profile-pic-section">
+                                <div class="current-pic">
+                                    <img src="{{ url_for('profile_pic', filename=current_user.profile_picture) if current_user.profile_picture else '/static/images/default-avatar.png' }}" id="profilePreview" alt="Profile Picture">
+                                    <div class="pic-overlay">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                </div>
+                                <div class="pic-controls">
+                                    <label for="profilePic" class="btn btn-outline-primary">
+                                        <i class="fas fa-upload me-2"></i>Change Photo
+                                    </label>
+                                    <input type="file" id="profilePic" name="profile_picture" accept="image/*" style="display: none;" onchange="previewAndUpload(this)">
+                                    <button type="button" id="uploadPicOnly" class="btn btn-success ms-2" style="display: none;">
+                                        <i class="fas fa-check me-2"></i>Upload Photo Only
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Form Fields -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="{{ username or '' }}">
+                                        <label for="username">Username</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ email or '' }}">
+                                        <label for="email">Email</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-floating mb-4">
+                                <textarea class="form-control" id="bio" name="bio" placeholder="Bio" style="height: 100px">{{ bio or '' }}</textarea>
+                                <label for="bio">Bio</label>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" id="saveBtn">
+                                    <i class="fas fa-save me-2"></i>Save Changes
+                                </button>
+                                <a href="{{ url_for('profile') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.edit-profile-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+
+.main-content {
+    margin-top: 100px;
+    padding: 2rem 0;
+}
+
+.edit-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 2.5rem;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.card-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.card-header h2 {
+    color: #f8fafc;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.card-header p {
+    color: #94a3b8;
+    margin: 0;
+}
+
+.profile-pic-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.current-pic {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.current-pic img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+}
+
+.pic-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.current-pic:hover .pic-overlay {
+    opacity: 1;
+}
+
+.pic-overlay i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #f8fafc !important;
+    border-radius: 12px !important;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25) !important;
+    color: #f8fafc !important;
+}
+
+.form-floating > label {
+    color: #94a3b8 !important;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.profile-pic-nav {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0.5rem;
+}
+
+.invalid-feedback {
+    color: #fca5a5 !important;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .edit-card {
+        padding: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function previewAndUpload(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('profilePreview').src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+        
+        // Show upload button
+        document.getElementById('uploadPicOnly').style.display = 'inline-block';
+    }
+}
+
+function uploadPhotoOnly() {
+    const form = document.querySelector('.edit-form');
+    const formData = new FormData();
+    const fileInput = document.getElementById('profilePic');
+    
+    if (fileInput.files[0]) {
+        formData.append('profile_picture', fileInput.files[0]);
+        
+        // Clear other form fields to avoid validation
+        formData.append('username', '');
+        formData.append('email', '');
+        formData.append('bio', '');
+        
+        const uploadBtn = document.getElementById('uploadPicOnly');
+        uploadBtn.disabled = true;
+        uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            if (data.includes('success')) {
+                window.location.href = '{{ url_for("profile") }}';
+            } else {
+                location.reload();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            location.reload();
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.edit-form');
+    const saveBtn = document.getElementById('saveBtn');
+    const uploadPicBtn = document.getElementById('uploadPicOnly');
+    
+    uploadPicBtn.addEventListener('click', uploadPhotoOnly);
+    
+    form.addEventListener('submit', function() {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+    });
+});
+</script>
+{% endblock %}

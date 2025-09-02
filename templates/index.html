@@ -1,0 +1,651 @@
+{% extends "base.html" %}
+
+{% block title %}SecureCloud - Enterprise File Storage{% endblock %}
+
+{% block content %}
+<div class="landing-container">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <div class="brand-logo navbar-brand">
+                <i class="fas fa-shield-alt"></i>
+                <span>SecureCloud</span>
+            </div>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#security">Security</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-primary ms-2 px-3" href="{{ url_for('register') }}">Get Started</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" style="padding-top: 140px;">
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="hero-title">
+                            Enterprise-Grade
+                            <span class="gradient-text">Secure Storage</span>
+                        </h1>
+                        <p class="hero-subtitle">
+                            Protect your most sensitive data with military-grade AES-256 encryption, 
+                            zero-knowledge architecture, and enterprise security features.
+                        </p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <h4>99.9%</h4>
+                                <span>Uptime</span>
+                            </div>
+                            <div class="stat-item">
+                                <h4>256-bit</h4>
+                                <span>Encryption</span>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Zero</h4>
+                                <span>Knowledge</span>
+                            </div>
+                        </div>
+                        <div class="hero-actions">
+                            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-rocket me-2"></i>Start Free Trial
+                            </a>
+                            <a href="#demo" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-play me-2"></i>Watch Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-visual">
+                        <div class="security-visualization">
+                            <div class="cloud-icon">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <div class="shield-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="lock-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Why Choose SecureCloud?</h2>
+                <p>Built for enterprises that demand the highest security standards</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon bg-primary">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h4>AES-256 Encryption</h4>
+                        <p>Military-grade encryption protects your files with the same technology used by governments and banks worldwide.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon bg-success">
+                            <i class="fas fa-eye-slash"></i>
+                        </div>
+                        <h4>Zero Knowledge</h4>
+                        <p>We can't see your data, even if we wanted to. Only you have the keys to decrypt your files.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon bg-warning">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4>Two-Factor Auth</h4>
+                        <p>Add an extra layer of security with TOTP-based two-factor authentication.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon bg-info">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h4>Real-time Sync</h4>
+                        <p>Access your files from anywhere with instant synchronization across all devices.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon bg-danger">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <h4>Secure Sharing</h4>
+                        <p>Share files securely with expiring links and granular permission controls.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon bg-secondary">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h4>Audit Trails</h4>
+                        <p>Complete activity logging and audit trails for compliance and security monitoring.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Section -->
+    <section id="security" class="security-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="security-content">
+                        <h2>Enterprise Security Standards</h2>
+                        <p>SecureCloud meets the highest security standards required by enterprises, government agencies, and healthcare organizations.</p>
+                        
+                        <div class="security-features">
+                            <div class="security-item">
+                                <i class="fas fa-certificate"></i>
+                                <div>
+                                    <h6>SOC 2 Compliant</h6>
+                                    <span>Audited security controls</span>
+                                </div>
+                            </div>
+                            <div class="security-item">
+                                <i class="fas fa-shield-virus"></i>
+                                <div>
+                                    <h6>GDPR Ready</h6>
+                                    <span>Privacy by design</span>
+                                </div>
+                            </div>
+                            <div class="security-item">
+                                <i class="fas fa-user-shield"></i>
+                                <div>
+                                    <h6>HIPAA Compliant</h6>
+                                    <span>Healthcare data protection</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="security-visual">
+                        <div class="security-layers">
+                            <div class="layer layer-1">
+                                <i class="fas fa-globe"></i>
+                                <span>Internet</span>
+                            </div>
+                            <div class="layer layer-2">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>TLS 1.3</span>
+                            </div>
+                            <div class="layer layer-3">
+                                <i class="fas fa-lock"></i>
+                                <span>AES-256</span>
+                            </div>
+                            <div class="layer layer-4">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Your Files</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-card">
+                <h2>Ready to Secure Your Data?</h2>
+                <p>Join thousands of organizations that trust SecureCloud with their most sensitive information</p>
+                <div class="cta-actions">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-shield-alt me-2"></i>Start Free Trial
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-phone me-2"></i>Contact Sales
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="brand-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>SecureCloud</span>
+                    </div>
+                    <p>Enterprise-grade secure file storage with zero-knowledge encryption</p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Product</h6>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#security">Security</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>Company</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="row">
+                <div class="col-12 text-center">
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.landing-container {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+
+.navbar {
+    background: rgba(15, 23, 42, 0.9) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.hero-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%);
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #f8fafc;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: #cbd5e1;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.hero-stats .stat-item {
+    text-align: center;
+}
+
+.hero-stats h4 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #6366f1;
+    margin-bottom: 0.25rem;
+}
+
+.hero-stats span {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+}
+
+.security-visualization {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+.cloud-icon, .shield-icon, .lock-icon {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+}
+
+.cloud-icon {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+    background: var(--info-gradient);
+    font-size: 3rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.shield-icon {
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 80px;
+    height: 80px;
+    background: var(--success-gradient);
+    font-size: 2.5rem;
+    animation: float 3s ease-in-out infinite 1s;
+}
+
+.lock-icon {
+    bottom: 0;
+    right: 0;
+    width: 70px;
+    height: 70px;
+    background: var(--warning-gradient);
+    font-size: 2rem;
+    animation: float 3s ease-in-out infinite 2s;
+}
+
+.features-section {
+    padding: 100px 0;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.section-header {
+    margin-bottom: 4rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+}
+
+.section-header p {
+    font-size: 1.125rem;
+    color: #94a3b8;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+    margin-bottom: 2rem;
+}
+
+.feature-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.feature-card h4 {
+    color: #f8fafc;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.feature-card p {
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+.security-section {
+    padding: 100px 0;
+}
+
+.security-content h2 {
+    color: #f8fafc;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.security-content > p {
+    color: #cbd5e1;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}
+
+.security-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+
+.security-item i {
+    font-size: 1.5rem;
+    color: #10b981;
+}
+
+.security-item h6 {
+    color: #f8fafc;
+    font-weight: 600;
+    margin: 0;
+}
+
+.security-item span {
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+.security-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.layer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 300px;
+    transition: all 0.3s ease;
+}
+
+.layer:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(10px);
+}
+
+.layer i {
+    font-size: 1.5rem;
+    color: #6366f1;
+}
+
+.layer span {
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.cta-section {
+    padding: 100px 0;
+}
+
+.cta-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 4rem;
+    text-align: center;
+    backdrop-filter: blur(20px);
+}
+
+.cta-card h2 {
+    color: #f8fafc;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.cta-card p {
+    color: #cbd5e1;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}
+
+.cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.footer {
+    padding: 3rem 0 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.footer h6 {
+    color: #f8fafc;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #6366f1;
+}
+
+.footer-divider {
+    border-color: rgba(255, 255, 255, 0.1);
+    margin: 2rem 0 1rem;
+}
+
+.footer p {
+    color: #94a3b8;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-stats {
+        justify-content: center;
+    }
+    
+    .hero-actions {
+        justify-content: center;
+    }
+    
+    .security-visualization {
+        margin-top: 3rem;
+    }
+    
+    .cta-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+</style>
+{% endblock %}

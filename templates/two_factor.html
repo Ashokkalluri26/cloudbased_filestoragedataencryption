@@ -1,0 +1,389 @@
+{% extends "base.html" %}
+
+{% block title %}Two-Factor Authentication - SecureCloud{% endblock %}
+
+{% block content %}
+<div class="two-factor-container d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="two-factor-card">
+                    <div class="card-header">
+                        <div class="brand-logo">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>SecureCloud</span>
+                        </div>
+                        <div class="security-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h2>Two-Factor Authentication</h2>
+                        <p>Enter the 6-digit code from your authenticator app</p>
+                    </div>
+                    
+                    <form method="POST" class="two-factor-form">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="token-input-container">
+                            {{ form.token(class="form-control token-input", placeholder="000000", maxlength="6", autocomplete="one-time-code") }}
+                            {% if form.token.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.token.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary auth-btn w-100 mb-3" id="verifyBtn">
+                            <i class="fas fa-check me-2"></i>
+                            Verify Code
+                        </button>
+                        
+                        <div class="backup-options">
+                            <a href="#" class="backup-link" onclick="showBackupForm()">
+                                <i class="fas fa-key me-1"></i>
+                                Use backup code instead
+                            </a>
+                        </div>
+                    </form>
+                    
+                    <!-- Backup Code Form (Hidden by default) -->
+                    <form method="POST" class="backup-form" id="backupForm" style="display: none;">
+                        {{ form.hidden_tag() }}
+                        <input type="hidden" name="use_backup" value="true">
+                        
+                        <div class="backup-header">
+                            <h5>Enter Backup Code</h5>
+                            <p>Use one of your saved backup codes</p>
+                        </div>
+                        
+                        <div class="backup-input-container">
+                            <input type="text" name="backup_code" class="form-control backup-input" placeholder="Enter backup code" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-warning w-100 mb-3">
+                            <i class="fas fa-key me-2"></i>
+                            Use Backup Code
+                        </button>
+                        
+                        <div class="backup-options">
+                            <a href="#" class="backup-link" onclick="showTokenForm()">
+                                <i class="fas fa-mobile-alt me-1"></i>
+                                Use authenticator app instead
+                            </a>
+                        </div>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <div class="help-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Having trouble? <a href="#" class="help-link">Contact Support</a>
+                        </div>
+                        <a href="{{ url_for('logout') }}" class="logout-link">
+                            <i class="fas fa-sign-out-alt me-1"></i>
+                            Sign out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.two-factor-container {
+    min-height: 100vh;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+
+.two-factor-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.15) 0%, transparent 50%);
+    animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.two-factor-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.brand-logo i {
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brand-logo span {
+    font-size: 1.25rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.security-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+}
+
+.security-icon i {
+    font-size: 2rem;
+    color: white;
+}
+
+.card-header h2 {
+    color: #f8fafc;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.card-header p {
+    color: #94a3b8;
+    margin: 0;
+}
+
+.token-input-container {
+    margin-bottom: 1.5rem;
+}
+
+.token-input {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #f8fafc !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5rem !important;
+    text-align: center !important;
+}
+
+.token-input:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25) !important;
+}
+
+.backup-input {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #f8fafc !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    text-align: center !important;
+    font-family: 'Courier New', monospace !important;
+    letter-spacing: 2px !important;
+}
+
+.backup-input:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 0 0.2rem rgba(245, 158, 11, 0.25) !important;
+}
+
+.auth-btn {
+    padding: 1rem 2rem;
+    font-weight: 600;
+    border-radius: 12px;
+    background: var(--primary-gradient);
+    border: none;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(99, 102, 241, 0.6);
+}
+
+.backup-options {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.backup-link {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.backup-link:hover {
+    color: #6366f1;
+}
+
+.backup-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.backup-header h5 {
+    color: #f8fafc;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.backup-header p {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.backup-input-container {
+    margin-bottom: 1.5rem;
+}
+
+.auth-footer {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.help-text {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.help-link {
+    color: #6366f1;
+    text-decoration: none;
+}
+
+.help-link:hover {
+    color: #8b5cf6;
+}
+
+.logout-link {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.logout-link:hover {
+    color: #ef4444;
+}
+
+.invalid-feedback {
+    color: #fca5a5 !important;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .two-factor-card {
+        padding: 2rem;
+    }
+    
+    .token-input {
+        font-size: 1.25rem !important;
+        letter-spacing: 0.25rem !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showBackupForm() {
+    document.querySelector('.two-factor-form').style.display = 'none';
+    document.getElementById('backupForm').style.display = 'block';
+}
+
+function showTokenForm() {
+    document.querySelector('.two-factor-form').style.display = 'block';
+    document.getElementById('backupForm').style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const tokenInput = document.querySelector('.token-input');
+    const backupInput = document.querySelector('.backup-input');
+    const verifyBtn = document.getElementById('verifyBtn');
+    
+    // Auto-format token input
+    if (tokenInput) {
+        tokenInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').substring(0, 6);
+            
+            // Auto-submit when 6 digits entered
+            if (this.value.length === 6) {
+                this.form.submit();
+            }
+        });
+    }
+    
+    // Format backup code input
+    if (backupInput) {
+        backupInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        });
+    }
+    
+    // Handle form submission
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                if (submitBtn.id === 'verifyBtn') {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verifying...';
+                } else {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Checking...';
+                }
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

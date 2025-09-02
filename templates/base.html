@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SecureCloud - Secure File Storage{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+            --success-gradient: linear-gradient(135deg, #10b981, #059669);
+            --danger-gradient: linear-gradient(135deg, #ef4444, #dc2626);
+            --warning-gradient: linear-gradient(135deg, #f59e0b, #d97706);
+            --info-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            line-height: 1.6;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .slide-in {
+            animation: slideInLeft 0.6s ease-out;
+        }
+        
+        /* AshokCreations Footer */
+        .ashok-footer {
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 0;
+            margin-top: auto;
+            backdrop-filter: blur(10px);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .footer-brand i {
+            color: #6366f1;
+            font-size: 1.2rem;
+        }
+        
+        .footer-brand span {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .footer-text p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* AI Assistant Styles */
+        .ai-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .ai-toggle {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .ai-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.6);
+        }
+
+        .ai-toggle i {
+            color: white;
+            font-size: 2rem;
+        }
+
+        .ai-chat-container {
+            position: absolute;
+            bottom: 100px;
+            right: 0;
+            width: 480px;
+            height: 650px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 1rem;
+        }
+
+        .ai-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .ai-info h6 {
+            color: #f8fafc;
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .ai-info span {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .ai-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .ai-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+        }
+
+        .ai-chat {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .ai-message {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .ai-message-bot {
+            align-self: flex-start;
+        }
+
+        .ai-message-user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .ai-message-content {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            max-width: 380px;
+            color: #f8fafc;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .ai-message-user .ai-message-content {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        .ai-message-content ul {
+            margin: 0.5rem 0;
+            padding-left: 1.2rem;
+        }
+
+        .ai-message-content li {
+            margin: 0.25rem 0;
+        }
+
+        .ai-input-container {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .suggestion-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0.75rem 1rem;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: #f8fafc;
+        }
+
+        .ai-input-box {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .ai-input-box input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #f8fafc;
+            font-size: 1rem;
+        }
+
+        .ai-input-box input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .ai-input-box input::placeholder {
+            color: #94a3b8;
+        }
+
+        .ai-input-box button {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .ai-input-box button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .ai-typing {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #94a3b8;
+            font-style: italic;
+            font-size: 0.8rem;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 2px;
+        }
+
+        .typing-dots span {
+            width: 4px;
+            height: 4px;
+            background: #6366f1;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6), 0 0 0 10px rgba(99, 102, 241, 0.1);
+            }
+            100% {
+                box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .ai-chat-container {
+                width: 360px;
+                height: 500px;
+            }
+            
+            .ai-assistant {
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .ai-toggle {
+                width: 70px;
+                height: 70px;
+            }
+
+            .ai-toggle i {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+    
+    <!-- AI Assistant (for authenticated pages) -->
+    {% if current_user and current_user.is_authenticated %}
+    <div class="ai-assistant" id="aiAssistant">
+        <div class="ai-toggle" id="aiToggle">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="ai-chat-container" id="aiChatContainer">
+            <div class="ai-header">
+                <div class="ai-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="ai-info">
+                    <h6>SecureCloud AI</h6>
+                    <span>Your intelligent assistant</span>
+                </div>
+                <button class="ai-close" id="aiClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="ai-chat" id="aiChat">
+                <div class="ai-message ai-message-bot">
+                    <div class="ai-message-content">
+                        <p>👋 Hello {{ current_user.username }}! I'm your SecureCloud AI assistant. I can help you with:</p>
+                        <ul>
+                            <li>File organization and management</li>
+                            <li>Security recommendations</li>
+                            <li>Storage optimization</li>
+                            <li>Platform features guidance</li>
+                        </ul>
+                        <p>How can I assist you today?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="ai-input-container">
+                <div class="ai-suggestions">
+                    <button class="suggestion-btn" onclick="sendSuggestion('How can I organize my files better?')">
+                        📁 Organize files
+                    </button>
+                    <button class="suggestion-btn" onclick="sendSuggestion('What security features are available?')">
+                        🔒 Security features
+                    </button>
+                    <button class="suggestion-btn" onclick="sendSuggestion('How much storage am I using?')">
+                        💾 Storage usage
+                    </button>
+                </div>
+                <div class="ai-input-box">
+                    <input type="text" id="aiInput" placeholder="Ask me anything..." maxlength="500">
+                    <button id="aiSend">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer class="ashok-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-code"></i>
+                    <span>AshokCreations</span>
+                </div>
+                <div class="footer-text">
+                    <p>&copy; 2025 AshokCreations. Crafted with passion for secure solutions.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AI Assistant JavaScript (for authenticated pages) -->
+    {% if current_user and current_user.is_authenticated %}
+    <script>
+        // AI Assistant functionality
+        let aiChatOpen = false;
+
+        function toggleAIChat() {
+            const chatContainer = document.getElementById('aiChatContainer');
+            const toggle = document.getElementById('aiToggle');
+            
+            if (aiChatOpen) {
+                chatContainer.style.display = 'none';
+                toggle.style.transform = 'scale(1)';
+                aiChatOpen = false;
+            } else {
+                chatContainer.style.display = 'flex';
+                toggle.style.transform = 'scale(0.9)';
+                aiChatOpen = true;
+            }
+        }
+
+        function sendSuggestion(message) {
+            document.getElementById('aiInput').value = message;
+            sendAIMessage();
+        }
+
+        function sendAIMessage() {
+            const input = document.getElementById('aiInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessageToChat(message, 'user');
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Simulate AI response
+            setTimeout(() => {
+                hideTypingIndicator();
+                const response = generateAIResponse(message);
+                addMessageToChat(response, 'bot');
+            }, 1500);
+        }
+
+        function addMessageToChat(message, sender) {
+            const chat = document.getElementById('aiChat');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `ai-message ai-message-${sender}`;
+            
+            messageDiv.innerHTML = `
+                <div class="ai-message-content">
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const chat = document.getElementById('aiChat');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'ai-typing';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                SecureCloud AI is typing
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            chat.appendChild(typingDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        function generateAIResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            const currentPage = window.location.pathname;
+            
+            // Page-specific responses
+            if (currentPage.includes('profile')) {
+                if (message.includes('profile') || message.includes('edit') || message.includes('photo')) {
+                    return `👤 Profile Management Tips:<br><br>
+                    • Upload a clear profile photo for better recognition<br>
+                    • Keep your bio updated and professional<br>
+                    • Enable 2FA for enhanced security<br>
+                    • Review your activity logs regularly<br><br>
+                    Need help with any specific profile settings?`;
+                }
+            }
+            
+            if (currentPage.includes('dashboard')) {
+                if (message.includes('dashboard') || message.includes('overview')) {
+                    return `📊 Dashboard Features:<br><br>
+                    • View your storage usage and file statistics<br>
+                    • Monitor recent file activities<br>
+                    • Access AI categorization insights<br>
+                    • Quick file upload and management<br><br>
+                    What would you like to explore on your dashboard?`;
+                }
+            }
+            
+            // General responses
+            if (message.includes('organize') || message.includes('files')) {
+                return `📁 File Organization Tips:<br><br>
+                • Use AI categorization to automatically sort files<br>
+                • Create folders for different projects<br>
+                • Use descriptive file names<br>
+                • Tag files for easy searching<br><br>
+                Would you like help organizing a specific type of file?`;
+            }
+            
+            if (message.includes('security') || message.includes('features')) {
+                return `🔒 Security Features:<br><br>
+                • AES-256 encryption for all files<br>
+                • Two-factor authentication (2FA)<br>
+                • Zero-knowledge architecture<br>
+                • Secure file sharing with expiration<br>
+                • Activity logging and monitoring<br><br>
+                I recommend enabling 2FA for maximum security!`;
+            }
+            
+            if (message.includes('storage') || message.includes('space')) {
+                return `💾 Storage Management:<br><br>
+                • Monitor your storage usage regularly<br>
+                • Delete unnecessary files<br>
+                • Compress large files before uploading<br>
+                • Use efficient file formats<br><br>
+                Check your dashboard for current storage statistics!`;
+            }
+            
+            if (message.includes('upload') || message.includes('add')) {
+                return `📤 File Upload Guide:<br><br>
+                1. Click the "Upload File" button<br>
+                2. Select your file(s)<br>
+                3. Files are automatically encrypted<br>
+                4. AI categorization happens instantly<br><br>
+                Supported: All file types up to 100MB each!`;
+            }
+            
+            if (message.includes('share') || message.includes('collaboration')) {
+                return `🤝 File Sharing:<br><br>
+                • Generate secure share links<br>
+                • Set expiration dates<br>
+                • Control download permissions<br>
+                • Track sharing activity<br><br>
+                Click the share button on any file to get started!`;
+            }
+            
+            if (message.includes('help') || message.includes('support')) {
+                return `🆘 I'm here to help! I can assist with:<br><br>
+                • File management and organization<br>
+                • Security best practices<br>
+                • Platform features and settings<br>
+                • Storage optimization<br>
+                • Troubleshooting issues<br><br>
+                Just ask me anything about SecureCloud!`;
+            }
+            
+            // Default response
+            return `🤖 I understand you're asking about "${userMessage}". Here are some things I can help you with:<br><br>
+            • File organization and management<br>
+            • Security features and settings<br>
+            • Storage optimization tips<br>
+            • Platform guidance<br><br>
+            Could you be more specific about what you'd like to know?`;
+        }
+
+        // Initialize AI Assistant
+        document.addEventListener('DOMContentLoaded', function() {
+            const aiToggle = document.getElementById('aiToggle');
+            const aiClose = document.getElementById('aiClose');
+            const aiSend = document.getElementById('aiSend');
+            const aiInput = document.getElementById('aiInput');
+            
+            if (aiToggle) aiToggle.addEventListener('click', toggleAIChat);
+            if (aiClose) aiClose.addEventListener('click', toggleAIChat);
+            if (aiSend) aiSend.addEventListener('click', sendAIMessage);
+            
+            if (aiInput) {
+                aiInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendAIMessage();
+                    }
+                });
+            }
+        });
+    </script>
+    {% endif %}
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

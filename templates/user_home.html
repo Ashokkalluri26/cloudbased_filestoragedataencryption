@@ -1,0 +1,1154 @@
+{% extends "base.html" %}
+
+{% block title %}Home - SecureCloud{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <div class="brand-logo navbar-brand">
+                <i class="fas fa-shield-alt"></i>
+                <span>SecureCloud</span>
+            </div>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link active" href="{{ url_for('home') }}"><i class="fas fa-home me-2"></i>Home</a>
+                    <a class="nav-link" href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            {% if current_user.profile_picture %}
+                            <img src="{{ url_for('profile_pic', filename=current_user.profile_picture) }}" class="profile-pic-nav" alt="Profile">
+                            {% else %}
+                            <img src="https://via.placeholder.com/40x40/6c757d/ffffff?text={{ current_user.username[0]|upper }}" class="profile-pic-nav" alt="Profile">
+                            {% endif %}
+                            {{ current_user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('profile') }}"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('change_password') }}"><i class="fas fa-key me-2"></i>Change Password</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('setup_2fa') }}"><i class="fas fa-shield-alt me-2"></i>2FA Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <div class="hero-badge">
+                            <i class="fas fa-shield-check me-2"></i>
+                            Enterprise-Grade Security
+                        </div>
+                        <h1 class="hero-title">
+                            Your Files, <span class="gradient-text">Secured</span> in the Cloud
+                        </h1>
+                        <p class="hero-subtitle">
+                            Store, sync, and share your files with military-grade encryption. 
+                            Access your data anywhere, anytime with complete privacy and control.
+                        </p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">{{ total_files }}</div>
+                                <div class="stat-label">Files Stored</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">{{ formatted_storage }}</div>
+                                <div class="stat-label">Storage Used</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">{{ download_count }}</div>
+                                <div class="stat-label">Downloads</div>
+                            </div>
+                        </div>
+                        <div class="hero-actions">
+                            <a href="{{ url_for('upload') }}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-upload me-2"></i>Upload Files
+                            </a>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-tachometer-alt me-2"></i>View Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-visual">
+                        <div class="cloud-container">
+                            <div class="cloud-main">
+                                <i class="fas fa-cloud"></i>
+                                <div class="security-layers">
+                                    <div class="layer layer-1"></div>
+                                    <div class="layer layer-2"></div>
+                                    <div class="layer layer-3"></div>
+                                </div>
+                            </div>
+                            <div class="floating-icons">
+                                <div class="icon-item" style="--delay: 0s">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="icon-item" style="--delay: 1s">
+                                    <i class="fas fa-image"></i>
+                                </div>
+                                <div class="icon-item" style="--delay: 2s">
+                                    <i class="fas fa-video"></i>
+                                </div>
+                                <div class="icon-item" style="--delay: 3s">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">
+                    <i class="fas fa-star me-2"></i>
+                    Platform Features
+                </div>
+                <h2>Everything You Need for Secure File Storage</h2>
+                <p>Advanced features designed to keep your data safe and accessible</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Military-Grade Encryption</h4>
+                        <p>AES-256 encryption protects your files both in transit and at rest. Your data is secured with the same technology used by governments and enterprises worldwide.</p>
+                        <div class="feature-highlight">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Zero-knowledge architecture
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>AI-Powered Organization</h4>
+                        <p>Smart categorization automatically organizes your files. Our AI analyzes content and generates intelligent tags for effortless file management.</p>
+                        <div class="feature-highlight">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Automatic file categorization
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h4>Cross-Device Sync</h4>
+                        <p>Access your files from anywhere, on any device. Real-time synchronization ensures your latest files are always available when you need them.</p>
+                        <div class="feature-highlight">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Instant synchronization
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>Real-Time Collaboration</h4>
+                        <p>Share files securely with team members and collaborate in real-time. Advanced permission controls ensure the right people have the right access.</p>
+                        <div class="feature-highlight">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Granular sharing controls
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4>Two-Factor Authentication</h4>
+                        <p>Add an extra layer of security with TOTP-based two-factor authentication. Protect your account even if your password is compromised.</p>
+                        <div class="feature-highlight">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Enhanced account security
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h4>Easy File Uploads</h4>
+                        <p>Drag and drop files or browse to upload. Support for all file types with progress tracking and automatic encryption during upload.</p>
+                        <div class="feature-highlight">
+                            <i class="fas fa-check-circle me-2"></i>
+                            All file types supported
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">
+                    <i class="fas fa-quote-left me-2"></i>
+                    User Testimonials
+                </div>
+                <h2>Trusted by Thousands of Users</h2>
+                <p>See what our users say about SecureCloud</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"SecureCloud has revolutionized how we handle sensitive documents. The encryption gives us peace of mind, and the AI organization saves hours of manual work."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="author-info">
+                                <h6>Sarah Johnson</h6>
+                                <span>Legal Consultant</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"The cross-device sync is flawless. I can start working on a project on my laptop and continue seamlessly on my phone. The collaboration features are outstanding."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="author-info">
+                                <h6>Michael Chen</h6>
+                                <span>Creative Director</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p>"As a healthcare provider, data security is paramount. SecureCloud's zero-knowledge encryption ensures our patient files remain completely private and secure."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="author-info">
+                                <h6>Dr. Emily Rodriguez</h6>
+                                <span>Healthcare Professional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-card">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h2>Ready to Secure Your Digital Life?</h2>
+                        <p>Join thousands of users who trust SecureCloud with their most important files. Start your secure cloud journey today.</p>
+                        <div class="cta-features">
+                            <div class="cta-feature">
+                                <i class="fas fa-check me-2"></i>
+                                5GB Free Storage
+                            </div>
+                            <div class="cta-feature">
+                                <i class="fas fa-check me-2"></i>
+                                Military-Grade Encryption
+                            </div>
+                            <div class="cta-feature">
+                                <i class="fas fa-check me-2"></i>
+                                AI-Powered Organization
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-center">
+                        <div class="cta-actions">
+                            <a href="{{ url_for('upload') }}" class="btn btn-primary btn-lg mb-3">
+                                <i class="fas fa-upload me-2"></i>Upload Your First File
+                            </a>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light">
+                                <i class="fas fa-tachometer-alt me-2"></i>Explore Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="brand-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>SecureCloud</span>
+                    </div>
+                    <p>Enterprise-grade secure file storage with zero-knowledge encryption</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.home-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+
+/* Navigation */
+.navbar {
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.brand-logo i, .brand-logo span {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profile-pic-nav {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 8px;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-link.active {
+    color: #6366f1 !important;
+    font-weight: 600;
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 120px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.15) 0%, transparent 50%);
+    animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 50px;
+    color: #a5b4fc;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #f8fafc;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: #cbd5e1;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease-out 0.8s both;
+}
+
+.hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    position: relative;
+}
+
+.cloud-container {
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+}
+
+.cloud-main {
+    position: relative;
+    font-size: 12rem;
+    color: #6366f1;
+    filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.5));
+}
+
+.security-layers {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.layer {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.layer-1 {
+    width: 120px;
+    height: 120px;
+    border-color: rgba(16, 185, 129, 0.6);
+    animation-delay: 0s;
+}
+
+.layer-2 {
+    width: 160px;
+    height: 160px;
+    border-color: rgba(59, 130, 246, 0.4);
+    animation-delay: 0.5s;
+}
+
+.layer-3 {
+    width: 200px;
+    height: 200px;
+    border-color: rgba(139, 92, 246, 0.3);
+    animation-delay: 1s;
+}
+
+.floating-icons {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.icon-item {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #f8fafc;
+    animation: floatIcon 4s ease-in-out infinite;
+    animation-delay: var(--delay);
+}
+
+.icon-item:nth-child(1) { top: 10%; left: 10%; }
+.icon-item:nth-child(2) { top: 20%; right: 15%; }
+.icon-item:nth-child(3) { bottom: 30%; left: 5%; }
+.icon-item:nth-child(4) { bottom: 10%; right: 10%; }
+
+/* Features Section */
+.features-section {
+    padding: 100px 0;
+    background: rgba(255, 255, 255, 0.02);
+    position: relative;
+}
+
+.section-header {
+    margin-bottom: 4rem;
+}
+
+.section-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 25px;
+    color: #a5b4fc;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+}
+
+.section-header p {
+    font-size: 1.125rem;
+    color: #94a3b8;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover::before {
+    transform: scaleX(1);
+}
+
+.feature-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    color: white;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+}
+
+.feature-card h4 {
+    color: #f8fafc;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.feature-card p {
+    color: #94a3b8;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.feature-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #10b981;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Testimonials Section */
+.testimonials-section {
+    padding: 100px 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.testimonial-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-5px);
+}
+
+.testimonial-content {
+    margin-bottom: 1.5rem;
+}
+
+.stars {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+    color: #fbbf24;
+}
+
+.testimonial-content p {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.author-info h6 {
+    color: #f8fafc;
+    margin: 0;
+    font-weight: 600;
+}
+
+.author-info span {
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 100px 0;
+}
+
+.cta-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 4rem;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    pointer-events: none;
+}
+
+.cta-card h2 {
+    color: #f8fafc;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+}
+
+.cta-card p {
+    color: #cbd5e1;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}
+
+.cta-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.cta-feature {
+    display: flex;
+    align-items: center;
+    color: #10b981;
+    font-weight: 500;
+}
+
+.cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Footer */
+.footer {
+    padding: 3rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.footer .brand-logo {
+    margin-bottom: 1rem;
+}
+
+.footer p {
+    color: #94a3b8;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-stats {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .hero-actions {
+        justify-content: center;
+    }
+    
+    .cloud-main {
+        font-size: 8rem;
+    }
+    
+    .hero-visual {
+        height: 400px;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .cta-card {
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .cta-card h2 {
+        font-size: 2rem;
+    }
+    
+    .cta-actions {
+        margin-top: 2rem;
+    }
+}
+
+.main-content {
+    margin-top: 100px;
+    padding: 2rem 0;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.brand-logo i, .brand-logo span {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profile-pic-nav {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 8px;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.welcome-header {
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.welcome-subtitle {
+    color: #cbd5e1;
+    font-size: 1.125rem;
+}
+
+.metric-card, .features-card, .ai-insights-card, .activity-card, .recent-files-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.metric-card {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.metric-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.metric-content h3 {
+    color: #f8fafc;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.metric-content p {
+    color: #94a3b8;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h5 {
+    color: #f8fafc;
+    margin: 0;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.feature-icon-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.feature-text h6 {
+    color: #f8fafc;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.feature-text small {
+    color: #94a3b8;
+}
+
+.category-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.category-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-name {
+    color: #cbd5e1;
+    font-size: 0.875rem;
+}
+
+.category-count {
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.category-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.category-progress {
+    height: 100%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.activity-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.activity-description {
+    color: #f8fafc;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.activity-time {
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+}
+
+.table-dark {
+    background: transparent;
+}
+
+.table-dark th, .table-dark td {
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #f8fafc;
+}
+
+.table-dark thead th {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-link.active {
+    color: #6366f1 !important;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .metric-card {
+        text-align: center;
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}
