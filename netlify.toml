@@ -1,3 +1,4 @@
-[build.environment]
-  PYTHON_VERSION = "3.11.8"
+[build]
+  environment = { PYTHON_VERSION = "3.8" }
+
 
